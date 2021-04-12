@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel='stylesheet' href='/css/style.css'>
+  <script src="myjs.js"></script>
+</head>
+
+<body>
+
+  <div class="phone-status-bar">
+    <h1 class="heading-primary">WhatsApp</h1>
+    <div class="phone-status-bar__right-icon">
+      <i class="fa fa-search" aria-hidden="true"></i>
+      <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="menu-bar">
+    <i class="fa fa-camera" aria-hidden="true"></i>
+    <ul class="menu-bar__list">
+      <li class="menu-bar__list-item" onclick="changeTab(1);">Chat</li>
+      <li class="menu-bar__list-item" onclick="changeTab(2);">Status</li>
+      <li class="menu-bar__list-item" onclick="changeTab(3);">Calls</li>
+    </ul>
+  </div>
+
+  <div class="chat-status-call">
+    <div class="chat-container">
+      <div class="contact-list">
+        <i class="material-icons">
+          chat
+        </i>
+      </div>
+
+      <form action="">
+        <label for="">Apelido</label>
+        <input type="text" id='input-username'>
+
+        <label for="">Avatar</label>
+        <input type="text" id='input-avatar'>>
+
+        <input type="submit" value="Entrar" id='button-login'>
+      </form>
+
+      <% users.forEach((user) => { %>
+        <a href='/chat/<%= user.id %>' class="chat-list">
+          <div class="person-profile">
+            <img
+              src="<%= user.avatar_url %>"
+              alt="" class="user-img">
+            <div class="person-name">
+              <h1 class="persion-name-heading">
+                <%= user.name %>
+              </h1>
+              <p class="person-chat">Bhai Thode Paise Chahiye The...</p>
+            </div>
+          </div>
+          <p class="last-chat-time">12:00 pm</p>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+
+  <script>
+    const buttonLogin = document.querySelector('#button-login');
+    const inputUsername = document.querySelector('#input-username');
+    const inputAvatar = document.querySelector('#input-avatar');
+
+    buttonLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      socket.emit('chat.addUser', {
+        username: inputUsername.value,
+        avatar: inputAvatar.value
+      });
+
+      
+    })
+
+  </script>
+</body>
+
+</html>
