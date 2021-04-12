@@ -22,12 +22,15 @@ io.on('connect', (socket) => {
 
   io.emit('chat.updateUsers', currentUsers);
 
-  socket.on('chat.addUser', (username) => {
+  socket.on('chat.addUser', ({ username, origin}) => {
     const data = users.find((u) => u.username === username);
 
     if (data) {
-      currentUsers.push({ socketId: socket.id, ...data });
-    
+      const newUser = { socketId: socket.id, ...data };
+      currentUsers.push(newUser);
+
+      io.to(origin).emit('chat.currentUser', newUser);
+
       io.emit('chat.updateUsers', currentUsers);
     }
   })
@@ -36,9 +39,9 @@ io.on('connect', (socket) => {
     io.emit('message', data);
   })
 
-  socket.on('private.message', ({ message, receiver, source}) => {
-    console.log(`${source} - ${receiver}`);
-    io.to(receiver).emit('private.message', message);
+  socket.on('private.message', ({ message, receiver, origin}) => {
+    console.log(`${receiver} - ${origin}`);
+    io.to(receiver).emit('private.message', { body: message, author: origin });
   });
 
   socket.on('disconnect', () => {
